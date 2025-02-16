@@ -1,0 +1,17 @@
+{
+  "name": "mcmod-translation-dict",
+  "version": "1.0.0",
+  "description": "MC模组翻译参考词典",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "sqlite3": "^5.1.7",
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "vercel": "^41.1.4"
+  }
+}
