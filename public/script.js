@@ -21,10 +21,9 @@ function search() {
         const pagination = document.getElementById('pagination');
         pagination.innerHTML = '';
 
-        return; // 直接返回，不发送请求
+        return;
     }
 
-    // 发送搜索请求
     fetch(`/api/search?q=${encodeURIComponent(query)}&page=${currentPage}`)
         .then(response => {
             if (!response.ok) {
@@ -121,7 +120,6 @@ function setupPagination(totalItems, query) {
     firstPageItem.appendChild(firstPageLink);
     paginationList.appendChild(firstPageItem);
 
-    // 显示最多 7 个页码
     const maxPagesToShow = 7;
     let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
     let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
@@ -183,5 +181,4 @@ function loadLastUpdated() {
         });
 }
 
-// 页面加载时调用
 loadLastUpdated();

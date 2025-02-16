@@ -5,7 +5,7 @@ const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const dbPath = path.join(__dirname, 'Dict-Sqlite.db'); // 确保路径正确
+const dbPath = path.join(__dirname, 'Dict-Sqlite.db');
 
 const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY, (err) => {
     if (err) {
@@ -15,7 +15,6 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY, (err) => {
     }
 });
 
-// 静态文件服务
 app.use(express.static('public'));
 
 // 获取数据库文件的最后修改时间
@@ -38,10 +37,8 @@ app.get('/api/search', (req, res) => {
         return res.status(400).json({ error: '查询参数不能为空' });
     }
 
-    // 标准化搜索词
     const normalizedQuery = query.trim().toLowerCase();
 
-    // 模糊匹配
     const sql = `
     SELECT trans_name, origin_name, modid, version, key, COUNT(*) as frequency,
            CASE
@@ -81,7 +78,7 @@ app.get('/api/search', (req, res) => {
         });
     });
 });
-// 启动服务器
+
 app.listen(port, () => {
     console.log(`服务器正在运行在 http://localhost:${port}`);
 });
