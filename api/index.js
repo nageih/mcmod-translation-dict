@@ -7,6 +7,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 const dbPath = path.join(__dirname, 'Dict-Sqlite.db');
 
+app.use(express.static('public')); 
+
 const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY, (err) => {
     if (err) {
         console.error('无法连接到数据库:', err.message);
@@ -14,8 +16,6 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY, (err) => {
         console.log('成功连接到SQLite数据库');
     }
 });
-
-app.use(express.static('public'));
 
 // 获取数据库文件的最后修改时间
 app.get('/api/lastUpdated', (req, res) => {

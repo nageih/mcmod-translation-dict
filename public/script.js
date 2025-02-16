@@ -171,14 +171,14 @@ function setupPagination(totalItems, query) {
 
 function loadLastUpdated() {
     fetch('/api/lastUpdated')
-        .then(response => response.json())
-        .then(data => {
-            const lastUpdatedElement = document.getElementById('lastUpdated');
-            lastUpdatedElement.innerText = `词典翻译数据由 CFPA 提供，基于 CC BY-NC-SA 4.0 协议。最后更新于：${data.lastUpdated}`;
+        .then(response => {
+            if (!response.ok) throw new Error('网络错误');
+            return response.json();
         })
-        .catch(error => {
-            console.error('无法加载最后更新时间:', error);
-        });
+        .then(data => {
+            document.getElementById('lastUpdated').innerText = `词典翻译数据由 CFPA 提供，基于 CC BY-NC-SA 4.0 协议。最后更新于：${data.lastUpdated}`;
+        })
+        .catch(console.error);
 }
 
 loadLastUpdated();

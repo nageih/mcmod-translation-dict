@@ -1,8 +1,8 @@
-<div align="center"><img height="150" src="public/favicon.ico"/>
+<div align="center">
+<img height="150" src="public/favicon.ico"/>
+</div>
 
 # MC模组翻译参考词典
-
-[![GitHub license](https://img.shields.io/github/license/Wulian233/mcmod-translation-dict?style=flat-square)](LICENSE)
 
 ## 关于本项目
 
@@ -23,6 +23,7 @@
 ## 版权归属
 
 本项目代码部分使用[GPL3协议](LICENSE.md)。
+[![GitHub license](https://img.shields.io/github/license/Wulian233/mcmod-translation-dict?style=flat-square)](LICENSE)
 
 本项目数据库来自 CFPATools 的 [i18n-dict](https://github.com/CFPATools/i18n-dict) 项目，翻译数据归属 CFPA 团队及其他译者 ，该作品采用 CC BY-NC-SA 4.0 授权。
 
