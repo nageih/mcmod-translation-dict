@@ -24,7 +24,7 @@ function search() {
         return;
     }
 
-    fetch(`/api/search?q=${encodeURIComponent(query)}&page=${currentPage}`)
+    fetch(`https://api.vmct-cn.top/search?q=${encodeURIComponent(query)}&page=${currentPage}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('网络响应错误');
@@ -49,14 +49,16 @@ function displayResults(data) {
     const resultsBody = document.getElementById('resultsBody');
     resultsBody.innerHTML = '';
 
-    if (!data.results || data.results.length === 0) {
+    if (!data.results || !data.results.results || data.results.results.length === 0) {
         resultsBody.innerHTML = '<tr><td colspan="4">未找到结果</td></tr>';
         return;
     }
 
+    const resultArray = data.results.results;
+
     // 合并相同条目的不同版本
     const mergedResults = {};
-    data.results.forEach(item => {
+    resultArray.forEach(item => {
         const key = `${item.TRANS_NAME}|${item.ORIGIN_NAME}`;
         if (!mergedResults[key]) {
             mergedResults[key] = {
@@ -64,12 +66,12 @@ function displayResults(data) {
                 ORIGIN_NAME: item.ORIGIN_NAME,
                 MODID: item.MODID,
                 VERSIONS: new Set(),
-                KEYS: new Set(), // 用于存储 KEY 值
+                KEYS: new Set(),
                 frequency: 0
             };
         }
         mergedResults[key].VERSIONS.add(item.VERSION);
-        mergedResults[key].KEYS.add(item.KEY); // 添加 KEY 值
+        mergedResults[key].KEYS.add(item.KEY);
         mergedResults[key].frequency += item.frequency;
     });
 
@@ -170,11 +172,8 @@ function setupPagination(totalItems, query) {
 }
 
 function loadLastUpdated() {
-    fetch('/api/lastUpdated')
-        .then(response => {
-            if (!response.ok) throw new Error('网络错误');
-            return response.json();
-        })
+    fetch('https://api.vmct-cn.top/lastUpdated')
+        .then(response => response.json())
         .then(data => {
             document.getElementById('lastUpdated').innerText = `词典翻译数据由 CFPA 提供，基于 CC BY-NC-SA 4.0 协议。最后更新于：${data.lastUpdated}`;
         })
