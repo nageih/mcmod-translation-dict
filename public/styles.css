@@ -1,112 +1,183 @@
 body {
-    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
-    background-color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
 }
 
 h1 {
-    color: #005a9e;
-    font-weight: 600;
+  color: #0089de;
 }
 
 #searchInput {
-    border-radius: 4px;
+  border-radius: 4px;
 }
 
 #searchButton {
-    border-radius: 4px;
+  background-color: #0089de;
+  color: #fff;
 }
 
 .table {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .highlight {
-    background-color: #ffeb3b;
-    font-weight: bold;
-    color: #000;
+  background-color: #ffeb3b;
+  font-weight: bold;
+  color: #000;
 }
 
 footer {
-    margin-top: 40px;
-    color: #666;
+  margin-top: 40px;
+  color: #666;
 }
 
 .pagination {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 20px;
 }
 
 .page-item {
-    list-style: none;
+  list-style: none;
 }
 
 .page-link {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    color: #005a9e;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #005a9e;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
 }
 
 .page-link:hover {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 .page-item.active .page-link {
-    background-color: #005a9e;
-    color: #fff;
-    border-color: #005a9e;
+  background-color: #005a9e;
+  color: #fff;
+  border-color: #005a9e;
 }
 
 .page-item.disabled .page-link {
-    pointer-events: none;
-    opacity: 0.6;
+  pointer-events: none;
+  opacity: 0.6;
 }
+
 .container {
-    width: 90%;
-    max-width: 1200px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 20px;
+  width: 90%;
+  max-width: 1200px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
 }
 
 #searchButton:hover {
-    background-color: #004578;
+  background-color: #004578;
 }
 
-
-th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: left;
+th,
+td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
 }
 
 th {
-    background-color: #f8f8f8;
-    font-weight: 600;
-    color: #333;
+  background-color: #f8f8f8;
+  font-weight: 600;
+  color: #333;
 }
 
 tr:hover {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
-#pagination button {
-    padding: 8px 16px;
-    margin: 0 4px;
-    background-color: #005a9e;
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #212327;
+    color: #ddd;
+  }
+
+  h1 {
+    color: #009dfe;
+  }
+
+  .container {
+    background-color: #404045;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  #searchInput {
+    background-color: #555;
+    color: #ddd;
+    border: 1px solid #666;
+  }
+
+  #searchInput::placeholder {
+    color: #ddd;
+  }
+
+  #searchButton {
+    background-color: #0089de;
     color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+  }
 
-#pagination button:hover {
-    background-color: #004578;
+  #searchButton:hover {
+    background-color: #0065b1;
+  }
+
+  footer {
+    color: #bbb;
+  }
+
+  .table {
+    --bs-table-bg: #404045;
+    --bs-table-color: #fff;
+    --bs-table-border-color: #555;
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.05);
+    --bs-table-hover-bg: rgba(255, 255, 255, 0.1);
+  }
+
+  .table > thead {
+    --bs-table-bg: #333;
+    --bs-table-color: #fff;
+  }
+
+  .table > :not(caption) > * > * {
+    border-color: var(--bs-table-border-color);
+  }
+
+  .table td,
+  .table th {
+    color: #fff;
+  }
+
+  .page-link {
+    background-color: #555;
+    color: #ddd;
+    border: 1px solid #444;
+  }
+
+  .page-link:hover {
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #333;
+  }
+
+  .page-item.active .page-link {
+    background-color: #0090fe;
+    color: #ffffff;
+    border-color: #006bb3;
+  }
+
+  .page-item.disabled .page-link {
+    color: #888;
+    border-color: #666;
+  }
 }

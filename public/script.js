@@ -1,183 +1,147 @@
-document.getElementById('searchButton').addEventListener('click', search);
-document.getElementById('searchInput').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        search();
-    }
-});
+document.getElementById('searchButton').addEventListener('click', search)
+document.getElementById('searchInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') search()
+})
 
-let currentPage = 1;
-const itemsPerPage = 50;
+let currentPage = 1
+const itemsPerPage = 50
 
 function search() {
-    const query = document.getElementById('searchInput').value.trim(); // 去除前后空格
+    const query = document.getElementById('searchInput').value.trim()
 
-    // 检查输入是否为空或全是空格
     if (!query) {
-        // 清空搜索结果
-        const resultsBody = document.getElementById('resultsBody');
-        resultsBody.innerHTML = '<tr><td colspan="4">请输入有效的搜索词</td></tr>';
-
-        // 清空分页
-        const pagination = document.getElementById('pagination');
-        pagination.innerHTML = '';
-
-        return;
+        updateResultsUI('请输入有效的搜索词')
+        return
     }
 
-    fetch(`https://api.vmct-cn.top/search?q=${encodeURIComponent(query)}&page=${currentPage}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('网络响应错误');
-            }
-            return response.json();
+    fetch(
+        `https://api.vmct-cn.top/search?q=${encodeURIComponent(query)}&page=${currentPage}`
+    )
+        .then(handleResponse)
+        .then((data) => {
+            displayResults(data)
+            setupPagination(data.total, query)
         })
-        .then(data => {
-            console.log('解析的数据:', data);
-            if (!data || !data.results) {
-                throw new Error('无效的响应数据');
-            }
-            displayResults(data);
-            setupPagination(data.total, query);
-        })
-        .catch(error => {
-            console.error('查询失败:', error);
-            alert('查询失败，请检查控制台日志。');
-        });
+        .catch(handleError)
+}
+
+function handleResponse(response) {
+    if (!response.ok) throw new Error('网络响应错误')
+    return response.json()
+}
+
+function handleError(error) {
+    console.error('查询失败:', error)
+    alert('查询失败，请检查控制台日志。')
+}
+
+function updateResultsUI(message) {
+    const resultsBody = document.getElementById('resultsBody')
+    resultsBody.innerHTML = `<tr><td colspan="4">${message}</td></tr>`
+    document.getElementById('pagination').innerHTML = ''
 }
 
 function displayResults(data) {
-    const resultsBody = document.getElementById('resultsBody');
-    resultsBody.innerHTML = '';
+    const resultsBody = document.getElementById('resultsBody')
+    resultsBody.innerHTML = ''
 
-    if (!data.results || !data.results.results || data.results.results.length === 0) {
-        resultsBody.innerHTML = '<tr><td colspan="4">未找到结果</td></tr>';
-        return;
+    if (!data?.results?.results?.length) {
+        updateResultsUI('未找到结果')
+        return
     }
 
-    const resultArray = data.results.results;
+    const mergedResults = mergeResults(data.results.results)
+    renderResults(mergedResults, data.query)
+}
 
-    // 合并相同条目的不同版本
-    const mergedResults = {};
-    resultArray.forEach(item => {
-        const key = `${item.TRANS_NAME}|${item.ORIGIN_NAME}`;
-        if (!mergedResults[key]) {
-            mergedResults[key] = {
+// 合并相同条目的不同版本
+function mergeResults(results) {
+    const merged = {}
+    results.forEach((item) => {
+        const key = `${item.TRANS_NAME}|${item.ORIGIN_NAME}`
+        if (!merged[key]) {
+            merged[key] = {
                 TRANS_NAME: item.TRANS_NAME,
                 ORIGIN_NAME: item.ORIGIN_NAME,
                 MODID: item.MODID,
                 VERSIONS: new Set(),
                 KEYS: new Set(),
                 frequency: 0
-            };
+            }
         }
-        mergedResults[key].VERSIONS.add(item.VERSION);
-        mergedResults[key].KEYS.add(item.KEY);
-        mergedResults[key].frequency += item.frequency;
-    });
+        merged[key].VERSIONS.add(item.VERSION)
+        merged[key].KEYS.add(item.KEY)
+        merged[key].frequency += item.frequency
+    })
+    return merged
+}
 
-    // 渲染合并后的结果
-    Object.values(mergedResults).forEach(item => {
-        const row = document.createElement('tr');
+function renderResults(results, query) {
+    const resultsBody = document.getElementById('resultsBody')
+    Object.values(results).forEach((item) => {
+        const row = document.createElement('tr')
         row.innerHTML = `
-            <td>${item.TRANS_NAME || '无翻译'}</td>
-            <td>${highlightQuery(item.ORIGIN_NAME, data.query)}</td>
-            <td title="${Array.from(item.KEYS).join('\n')}">${item.MODID || '未知模组'} (${Array.from(item.VERSIONS).join(', ')})</td>
-            <td>${item.frequency || 0}</td>
-        `;
-        resultsBody.appendChild(row);
-    });
+			<td>${item.TRANS_NAME || '无翻译'}</td>
+			<td>${highlightQuery(item.ORIGIN_NAME, query)}</td>
+			<td title="${Array.from(item.KEYS).join('\n')}">${item.MODID || '未知模组'} (${Array.from(item.VERSIONS).join(', ')})</td>
+			<td>${item.frequency || 0}</td>
+		`
+        resultsBody.appendChild(row)
+    })
 }
 
 function highlightQuery(text, query) {
-    if (!text || !query) return text || '';
-    const regex = new RegExp(`(${query})`, 'gi');
-    return text.replace(regex, '<span class="highlight">$1</span>');
+    if (!text || !query) return text || ''
+    const regex = new RegExp(`(${query})`, 'gi')
+    return text.replace(regex, '<span class="highlight">$1</span>')
 }
 
 function setupPagination(totalItems, query) {
-    const pagination = document.getElementById('pagination');
-    pagination.innerHTML = '';
+    const pagination = document.getElementById('pagination')
+    pagination.innerHTML = ''
 
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    const paginationContainer = document.createElement('nav');
-    const paginationList = document.createElement('ul');
-    paginationList.className = 'pagination';
+    const totalPages = Math.ceil(totalItems / itemsPerPage)
+    const paginationList = document.createElement('ul')
+    paginationList.className = 'pagination'
 
-    // 添加“第一页”箭头按钮
-    const firstPageItem = document.createElement('li');
-    firstPageItem.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+    const addPageButton = (label, page, isDisabled = false) => {
+        const pageItem = document.createElement('li')
+        pageItem.className = `page-item ${isDisabled ? 'disabled' : ''} ${page === currentPage ? 'active' : ''}`
 
-    const firstPageLink = document.createElement('a');
-    firstPageLink.className = 'page-link';
-    firstPageLink.href = '#';
-    firstPageLink.innerHTML = '&laquo;'; // 左箭头符号
-    firstPageLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (currentPage > 1) {
-            currentPage = 1;
-            search();
-        }
-    });
+        const pageLink = document.createElement('a')
+        pageLink.className = 'page-link'
+        pageLink.href = '#'
+        pageLink.innerHTML = label
+        pageLink.addEventListener('click', (e) => {
+            e.preventDefault()
+            if (page !== currentPage) {
+                currentPage = page
+                search()
+            }
+        })
 
-    firstPageItem.appendChild(firstPageLink);
-    paginationList.appendChild(firstPageItem);
+        pageItem.appendChild(pageLink)
+        paginationList.appendChild(pageItem)
+    }
 
-    const maxPagesToShow = 7;
-    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
-    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    // 第一页按钮
+    addPageButton('&laquo;', 1, currentPage === 1)
+
+    // 中间页码按钮
+    const maxPagesToShow = 7
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2))
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1)
 
     if (endPage - startPage + 1 < maxPagesToShow) {
-        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        startPage = Math.max(1, endPage - maxPagesToShow + 1)
     }
 
     for (let i = startPage; i <= endPage; i++) {
-        const pageItem = document.createElement('li');
-        pageItem.className = `page-item ${i === currentPage ? 'active' : ''}`;
-
-        const pageLink = document.createElement('a');
-        pageLink.className = 'page-link';
-        pageLink.href = '#';
-        pageLink.innerText = i;
-        pageLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            currentPage = i;
-            search();
-        });
-
-        pageItem.appendChild(pageLink);
-        paginationList.appendChild(pageItem);
+        addPageButton(i, i)
     }
 
-    // 添加“最后一页”箭头按钮
-    const lastPageItem = document.createElement('li');
-    lastPageItem.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+    // 最后一页按钮
+    addPageButton('&raquo;', totalPages, currentPage === totalPages)
 
-    const lastPageLink = document.createElement('a');
-    lastPageLink.className = 'page-link';
-    lastPageLink.href = '#';
-    lastPageLink.innerHTML = '&raquo;'; // 右箭头符号
-    lastPageLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (currentPage < totalPages) {
-            currentPage = totalPages;
-            search();
-        }
-    });
-
-    lastPageItem.appendChild(lastPageLink);
-    paginationList.appendChild(lastPageItem);
-
-    paginationContainer.appendChild(paginationList);
-    pagination.appendChild(paginationContainer);
+    pagination.appendChild(paginationList)
 }
-
-function loadLastUpdated() {
-    fetch('https://api.vmct-cn.top/lastUpdated')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('lastUpdated').innerText = `词典翻译数据由 CFPA 提供，基于 CC BY-NC-SA 4.0 协议。最后更新于：${data.lastUpdated}`;
-        })
-        .catch(console.error);
-}
-
-loadLastUpdated();
