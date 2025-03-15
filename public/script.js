@@ -6,9 +6,12 @@ document.getElementById('searchInput').addEventListener('keypress', (e) => {
 let currentPage = 1
 const itemsPerPage = 50
 
-function search() {
-    const query = document.getElementById('searchInput').value.trim()
+function search(resetPage = true) {
+    if (resetPage) {
+        currentPage = 1 // 只有手动搜索时才重置分页
+    }
 
+    const query = document.getElementById('searchInput').value.trim()
     if (!query) {
         updateResultsUI('请输入有效的搜索词')
         return
@@ -79,11 +82,20 @@ function mergeResults(results) {
 function renderResults(results, query) {
     const resultsBody = document.getElementById('resultsBody')
     Object.values(results).forEach((item) => {
+        const curseforgeLink = item.CURSEFORGE
+            ? `<a href="https://www.curseforge.com/minecraft/mc-mods/${item.CURSEFORGE}" target="_blank" rel="noopener noreferrer">
+                <img src="curseforge.svg" alt="CurseForge" width="16" height="16">
+               </a>`
+            : ''
+
         const row = document.createElement('tr')
         row.innerHTML = `
 			<td>${item.TRANS_NAME || '无翻译'}</td>
 			<td>${highlightQuery(item.ORIGIN_NAME, query)}</td>
-			<td title="${Array.from(item.KEYS).join('\n')}">${item.MODID || '未知模组'} (${Array.from(item.VERSIONS).join(', ')})</td>
+			<td title="${Array.from(item.KEYS).join('\n')}">
+                ${item.MODID || '未知模组'} (${Array.from(item.VERSIONS).join(', ')})
+                ${curseforgeLink}
+            </td>
 			<td>${item.frequency || 0}</td>
 		`
         resultsBody.appendChild(row)
@@ -101,6 +113,8 @@ function setupPagination(totalItems, query) {
     pagination.innerHTML = ''
 
     const totalPages = Math.ceil(totalItems / itemsPerPage)
+    if (totalPages <= 1) return
+
     const paginationList = document.createElement('ul')
     paginationList.className = 'pagination'
 
@@ -114,9 +128,9 @@ function setupPagination(totalItems, query) {
         pageLink.innerHTML = label
         pageLink.addEventListener('click', (e) => {
             e.preventDefault()
-            if (page !== currentPage) {
+            if (!isDisabled && page !== currentPage) {
                 currentPage = page
-                search()
+                search(false) // 点击分页时不重置页码
             }
         })
 
