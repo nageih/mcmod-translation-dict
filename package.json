@@ -1,14 +1,16 @@
 {
     "name": "mcmod-translation-dict",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "MC模组翻译参考词典",
     "main": "frontend/index.html",
     "scripts": {
         "dev": "vercel dev",
-        "lint:fix": "prettier --write ."
+        "lint:fix": "prettier --write .",
+        "upgrade-deps": "taze patch -I"
     },
     "devDependencies": {
-        "prettier": "^3.5.1",
-        "vercel": "^41.1.4"
+        "prettier": "^3.5.3",
+        "taze": "^19.0.2",
+        "vercel": "^41.4.1"
     }
 }

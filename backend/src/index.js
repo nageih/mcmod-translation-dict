@@ -14,21 +14,6 @@ export default {
 
 	  const cache = caches.default;
   
-	  if (path === '/lastUpdated') {
-		const cachedResponse = await cache.match(request);
-		if (cachedResponse) {
-		  return cachedResponse;
-		}
-  
-		const lastUpdated = await getLastUpdated();
-		const response = new Response(JSON.stringify({ lastUpdated }), {
-		  headers: { ...headers, 'Content-Type': 'application/json' },
-		});
-
-		await cache.put(request, response.clone(), { expirationTtl: cacheTtl });
-		return response;
-	  }
-  
 	  if (path === '/search') {
 		const query = queryParams.get('q');
 		const page = parseInt(queryParams.get('page')) || 1;
@@ -94,8 +79,3 @@ export default {
 	  return new Response('Not Found', { status: 404 });
 	}
   };
-
-  async function getLastUpdated() {
-	return "2025-02-15";
-  }
-  
