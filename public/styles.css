@@ -112,11 +112,6 @@ tr:hover {
     color: #009dfe;
   }
 
-  .container {
-    background-color: #404045;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
-
   #searchInput {
     background-color: #555;
     color: #ddd;
@@ -136,8 +131,21 @@ tr:hover {
     background-color: #0065b1;
   }
 
+  a {
+    color: #0090fe;
+  }
+  
+  a:hover {
+    color: #0073d1;
+  }
+
   footer {
     color: #bbb;
+  }
+
+  .container {
+    background-color: #404045;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 
   .table {
@@ -183,5 +191,21 @@ tr:hover {
   .page-item.disabled .page-link {
     color: #888;
     border-color: #666;
+  }
+
+  .form-select {
+    background-color: #555;
+    color: #ddd;
+    border: 1px solid #666;
+  }
+
+  .form-select option {
+    background-color: #555;
+    color: #ddd;
+  }
+
+  .form-select:focus {
+    border-color: #0090fe;
+    box-shadow: 0 0 0 0.25rem rgba(0, 144, 254, 0.25);
   }
 }

@@ -87,8 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${item.TRANS_NAME || "无翻译"}</td>
-                <td>${highlightQuery(item.ORIGIN_NAME, query)}</td>
+                <td>${mode === "en2zh" ? (item.TRANS_NAME || "无翻译") : (item.ORIGIN_NAME || "无翻译")}</td>
+                <td>${highlightQuery(mode === "en2zh" ? item.ORIGIN_NAME : item.TRANS_NAME, query)}</td>
                 <td title="${Array.from(item.KEYS).join("\n")}">
                     ${item.MODID || "未知模组"} (${Array.from(item.VERSIONS).join(", ")})
                     ${curseforgeLink}

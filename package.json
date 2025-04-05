@@ -1,6 +1,6 @@
 {
     "name": "mcmod-translation-dict",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "description": "MC模组翻译参考词典",
     "main": "frontend/index.html",
     "scripts": {
