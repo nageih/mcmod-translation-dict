@@ -19,8 +19,12 @@
                     type="text"
                     id="searchInput"
                     class="form-control"
-                    placeholder="请输入英文原文..."
+                    placeholder="请输入搜索词..."
                 />
+                <select id="searchMode" class="form-select" style="max-width: 150px;">
+                    <option value="en2zh">英文查中文</option>
+                    <option value="zh2en">中文查英文</option>
+                </select>
                 <button id="searchButton" class="btn btn-primary">查询</button>
             </div>
             <div id="results">

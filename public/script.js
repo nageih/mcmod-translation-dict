@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const searchButton = document.getElementById("searchButton");
     const searchInput = document.getElementById("searchInput");
+    const searchMode = document.getElementById("searchMode");
     const resultsBody = document.getElementById("resultsBody");
     const pagination = document.getElementById("pagination");
 
@@ -20,7 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const query = searchInput.value.trim();
         if (!query) return updateResultsUI("请输入有效的搜索词");
 
-        fetch(`https://api.vmct-cn.top/search?q=${encodeURIComponent(query)}&page=${currentPage}`)
+        const mode = searchMode.value;
+        fetch(`https://api.vmct-cn.top/search?q=${encodeURIComponent(query)}&page=${currentPage}&mode=${mode}`)
             .then((response) => {
                 if (!response.ok) throw new Error("网络响应错误");
                 return response.json();
@@ -32,8 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 const mergedResults = mergeResults(data.results.results);
-                displayResults(mergedResults, query);
-                setupPagination(data.total, query);
+                displayResults(mergedResults, query, mode);
+                setupPagination(data.total, query, mode);
             })
             .catch((error) => {
                 console.error("查询失败:", error);
@@ -72,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return [...merged.values()];
     }
 
-    function displayResults(results, query) {
+    function displayResults(results, query, mode) {
         resultsBody.innerHTML = "";
 
         results.forEach((item) => {
@@ -104,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return text.replace(regex, (match) => `<span class="highlight">${match}</span>`);
     }
 
-    function setupPagination(totalItems, query) {
+    function setupPagination(totalItems, query, mode) {
         pagination.innerHTML = "";
 
         const totalPages = Math.ceil(totalItems / itemsPerPage);
