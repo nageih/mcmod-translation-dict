@@ -20,7 +20,13 @@
 - 自动分页，一页50条结果，网页下方支持快速跳转首页/尾页
 - 记录键名，鼠标悬停在`所属模组`条目上方会显示译文对应的键名
 - 及时更新的数据源
-- 现代化的页面，支持暗色模式
+- 页面美观，支持暗色模式，并且对手机上的显示效果进行了单独优化
+
+## 未实现功能
+
+欢迎各位大佬参与贡献！
+
+- [ ] 筛选条件查找
 
 ## 技术细节
 
@@ -59,7 +65,7 @@ https://api.vmct-cn.top/search?q=${query}&page=${currentPage}&mode=${mode}
 然而D1数据库并不支持 [i18n-dict](https://github.com/CFPATools/i18n-dict) 项目
 中的sqlite3 `.db`格式，所以还需要转换为`.sql`格式。
 
-关于创建worker并链接D1数据库请看[官方教程](https://developers.cloudflare.com/d1/get-started/)，下方仅列出上传数据库处理步骤。
+关于创建worker并链接D1数据库请看[官方教程](https://developers.cloudflare.com/d1/get-started/)，下方仅列出上传数据库的处理步骤：
 
 1. 下载原`.db`格式的数据库文件，并在SQLite官网下载[SQLite Tools](https://www.sqlite.org/2025/sqlite-tools-win-x64-3490100.zip)并解压。
 2. 打开sqlite3.exe，并输入下面的命令转换格式：
@@ -97,10 +103,3 @@ npx wrangler d1 execute prod-d1-tutorial --remote --file=./Dict-Sqlite.sql
 [![GitHub license](https://img.shields.io/github/license/Wulian233/mcmod-translation-dict?style=flat-square)](LICENSE.md)
 
 本项目数据库来自 CFPATools 的 [i18n-dict](https://github.com/CFPATools/i18n-dict) 项目，翻译数据归属 CFPA 团队及其他译者 ，该作品采用 CC BY-NC-SA 4.0 授权。
-
-## 未实现功能
-
-欢迎各位大佬参与贡献！
-
-- [ ] 为模式选择下拉框支持暗色模式
-- [ ] 筛选条件查找

@@ -209,3 +209,29 @@ tr:hover {
     box-shadow: 0 0 0 0.25rem rgba(0, 144, 254, 0.25);
   }
 }
+
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    padding: 15px;
+    margin: 10px auto;
+  }
+
+  .input-group > * {
+    width: 100% !important;
+    margin-bottom: 8px;
+  }
+  
+  #searchMode {
+    max-width: 100% !important;
+  }
+
+  table {
+    font-size: 0.85rem;
+  }
+  
+  th, td {
+    padding: 8px 6px;
+    min-width: 80px;
+  }
+}
